@@ -90,7 +90,14 @@ extension WebRedirectComponent: SFSafariViewControllerDelegate {
     /// Called when user clicks "Cancel" button.
     /// :nodoc:
     internal func safariViewControllerDidFinish(_: SFSafariViewController) {
-        delegate?.didFail(with: ComponentError.cancelled, from: self)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    if UIApplication.shared.applicationState == .active {
+                        self.delegate?.didFail(with: ComponentError.cancelled, from: self)
+                    }
+                    else {
+                        self.delegate?.didOpenExternalApplication(self)
+                    }
+                }
     }
 }
 
